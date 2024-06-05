@@ -2,9 +2,13 @@
 
 MWE for running Apache serving index.html through http://localhost/proxied/, which should rewrite links in HTML so that `<link href="/style.css">` becomes `<link href="/proxied/style.css>`. That is not the case. Why?
 
-Run `make` to launch apache and one request (which goes through the proxy, so apache proxies the request to itself, then sends the index.html back through the reverse proxy); the result should have the links modified (but does not). Apache is terminated after a few seconds.
+Run `make` to launch apache and one request (which goes through the proxy, so apache proxies the request to python http server, then sends the index.html back through the reverse proxy); the result should have the links modified (but does not). Apache is terminated after a few seconds.
 
-This MWE was tested on Debian, you need `apache2` installed, and also `ccze` (for colors). All runs as the current user in the current directory, for a few seconds, does not touch anything else. Port 8080.
+This MWE was tested on Debian, you need `apache2` installed, python, and also `ccze` (for colors). All runs as the current user in the current directory, for a few seconds, does not touch anything else. Port 8080 for apache and 8081 for python http server.
+
+# Solved
+
+`ProxyHTMLURLMap` was missing the `R` flag for "regex", so `^/` was not matching as literal. After adding `R`, everything works.
 
 # Output
 
